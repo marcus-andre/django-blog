@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.db.models.functions import Lower
 
 # Create your models here.
 
@@ -19,7 +19,7 @@ class Post(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["created_on"]
+        ordering = ["-created_on"]
 
     def __str__(self):
         return f"{self.title} | written by {self.author}"
@@ -35,7 +35,7 @@ class Comment(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["-created_on"]
+        ordering = [Lower("author__username")]
 
     def __str__(self):
-        return f"Comment {self.post} by {self.author}"
+        return f"Comment {self.post.title} by {self.author}, on the post of {self.post.author}"
